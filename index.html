@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuanLe PoC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 5%;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+    }
+
+    .sidebar {
+      height: 400px;
+      width: 20%;
+      overflow-y: auto;
+      border: 2px solid #b3b3b3;
+      padding: 20px;
+      margin: 5px;
+      border-radius: 5px;
+    }
+
+    .auto-detect,
+    .searching-results {
+      height: 200px;
+      overflow-y: auto;
+    }
+
+    .auto-detect::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .auto-detect::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .auto-detect::-webkit-scrollbar-thumb {
+      background: #c20000;
+      border-radius: 3px;
+    }
+
+    .auto-detect::-webkit-scrollbar-thumb:hover {
+      background: dark#c20000;
+    }
+
+    .sidebar h2 {
+      color: #333;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      display: flex;
+      justify-content: center ;
+      background-color: #e6e6e6;
+      border-radius: 20px;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: #1a1a1a;
+      border-radius: 2px;
+      
+
+    }
+
+    .sidebar ul li a:hover {
+      color: white;
+      background-color: #c20000;
+    }
+    .sidebar ul li:hover {
+      color: white;
+      background-color: #c20000;
+    }
+
+    .content {
+      flex: 1;
+      font-size: 12px;
+    }
+
+    .chat-container {
+      position: relative;
+      margin: 5px;
+    }
+
+    .chat-box {
+      height: 400px;
+      overflow-y: auto;
+      border: 2px solid #b3b3b3;
+      padding: 20px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-box::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-box::-webkit-scrollbar-thumb {
+      background: #c20000;
+      border-radius: 3px;
+    }
+
+    .chat-box::-webkit-scrollbar-thumb:hover {
+      background: dark#c20000;
+    }
+
+    #user-input {
+      width: 95%;
+      padding: 10px;
+      margin-right: 10px;
+      border: 2px solid #b3b3b3;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: white;
+      color: #c20000;
+      border: #c20000;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #c20000;
+      color: white;
+    }
+
+    .arrow-down-button {
+
+      position: absolute;
+      bottom: 40px;
+      right: 30px;
+    }
+
+    @keyframes dance {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .generate-animation {
+      margin-block: 1%;
+      padding: 0px;
+      margin-left: 5px;
+      background-color: white;
+      animation: dance 1s infinite;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><b>Auto solution</b></h1>
+  <input type="text" id="user-input" placeholder="Search for solution..." autocomplete="off" list="suggestions">
+  <datalist id="suggestions">
+    <option value="lockcard">
+    <option value="freeze card">
+    <option value="create card">
+    <option value="Test value">
+  </datalist>
+
+  <div class="generate-animation" id="generate-animation">Generating...</div>
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <div class="auto-detect">
+        <h4 style="margin: 2%; cursor:pointer" onclick="setAutoDetectContent()">Auto detect</h4>
+        <ul id="question-list">
+
+        </ul>
+      </div>
+      <div class="searching-results">
+        <h4 style="margin: 2%; cursor:pointer" onclick="delContent()">Searching results</h4>
+        <ul id="results-list">
+
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="content">
+
+      <div class="chat-container">
+
+
+        <div class="chat-box" id="chat-box">
+          <button class="arrow-down-button" id="arrow-down-button" onclick="scrollToBottom()">
+            <div style="font-size: 20px;">
+              &#8595;
+            </div>
+          </button>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let questionCount = 0;
+    let autoDetectContent = [];
+    autoDetectContent.push(document.getElementById("arrow-down-button"))
+    let currentContent = "autoDetect"
+
+    function setResultContent(input) {
+      currentContent = "searchingResults"
+      var chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = "";
+      if (input == "lockcard") {
+        chatBox.innerHTML = listStub[2]
+      } else {
+        if (input == "freeze card") {
+          chatBox.innerHTML = listStub[1]
+        }
+        else {
+          if (input == "create card") {
+            chatBox.innerHTML = listStub[0]
+          }
+        }
+      }
+
+    }
+    function setAutoDetectContent() {
+      currentContent = "autoDetect"
+      var chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = "";
+      for (var i = 0; i < autoDetectContent.length; i++) {
+        chatBox.appendChild(autoDetectContent[i]);
+      }
+    }
+
+    let listStub = [`
+   <h4>This is intent label</h4>
+   <h3>How to Create a Credit Card</h3>
+
+ <div id="steps">
+   <ol>
+     <li>Research different c#Credit card options from various banks or financial institutions.</li>
+     <li>Compare interest rates, annual fees, rewards programs, and other features to find the best card for your needs.</li>
+     <li>Once you've selected a c#Credit card, visit the bank's website or go to a physical branch to begin the application process.</li>
+     <li>Fill out the application form with accurate personal and financial information.</li>
+     <li>Submit any requi#Credit documents, such as proof of income or identification.</li>
+     <li>Wait for approval from the bank. This process may take a few days to a few weeks.</li>
+     <li>Once approved, the bank will issue your c#c20000it card and mail it to your registe#c20000 address.</li>
+     <li>Upon receiving your c#c20000it card, activate it as per the instructions provided by the bank.</li>
+     <li>Your c#c20000it card is now ready to use for purchases, payments, and other transactions.</li>
+   </ol>
+ </div>
+ _______________________________________________________________________________
+<br/>
+<br/>
+<br/>
+
+
+ `, `
+ <h4>This is intent label</h4>
+ <h3>How to Freeze Credit Card</h3>
+
+<div id="steps_freeze">
+  <ol>
+    <li>Log in to your online banking account or mobile banking app.</li>
+    <li>Navigate to the section for managing your credit card.</li>
+    <li>Locate the option to freeze your credit card. This may be labeled as "Card Freeze" or "Temporary Card Block."</li>
+    <li>Select the credit card you wish to freeze from the list of your accounts.</li>
+    <li>Follow the prompts to confirm the freeze request. You may need to provide a reason for freezing your card.</li>
+    <li>Verify the details of the freeze request and submit it.</li>
+    <li>Your credit card is now temporarily frozen, and you will not be able to use it for any transactions.</li>
+    <li>Keep track of any instructions provided by your bank for unfreezing your card when needed.</li>
+  </ol>
+</div>
+________________________________________________________________________________
+<br/>
+<br/>
+<br/>
+`,
+      `
+<h4>This is intent label</h4>
+<h3>How to Lock Card</h3>
+
+<div id="steps_lock">
+  <ol>
+    <li>Access your online banking account or mobile banking app.</li>
+    <li>Go to the section dedicated to managing your credit cards.</li>
+    <li>Find the option to lock your credit card. This might be labeled as "Card Lock" or "Permanent Card Block."</li>
+    <li>Select the specific credit card you want to lock from the list.</li>
+    <li>Confirm your decision to lock the card by following the provided instructions.</li>
+    <li>Review the lock request details and proceed to submit it.</li>
+    <li>Your credit card is now permanently locked, and it cannot be used for any transactions.</li>
+    <li>Consider contacting your bank's customer support for further assistance or to inquire about unlocking the card in the future.</li>
+  </ol>
+</div>
+__________________________________________________________________________________
+<br/>
+<br/>
+<br/>
+`]
+
+    function sendMessage() {
+
+      setTimeout(function () {
+        var randomIndex = Math.floor(Math.random() * listStub.length);
+        appendMessage("AXT - Echo", listStub[randomIndex]);
+      }, 200);
+      addToSidebar();
+      document.getElementById("user-input").value = "";
+    }
+
+    function appendMessage(sender, message) {
+      var chatBox = document.getElementById("chat-box");
+      var messageDiv = document.createElement("div");
+      messageDiv.innerHTML = "<strong>" + sender + "</strong> " + message;
+
+      if (currentContent == "autoDetect") {
+        chatBox.appendChild(messageDiv);
+      }
+
+      autoDetectContent.push(messageDiv);
+
+      if (chatBox.scrollHeight - (chatBox.scrollTop + chatBox.clientHeight) < 500) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+
+    function addToSidebar() {
+      questionCount++;
+      var sidebar = document.getElementById("sidebar");
+      var questionList = document.getElementById("question-list");
+      var questionItem = document.createElement("li");
+      var questionLink = document.createElement("a");
+      var questionId = "q" + questionCount;
+
+      questionLink.textContent = "Intent " + questionCount;
+      questionLink.href = "#" + questionId;
+      questionItem.appendChild(questionLink);
+      questionList.appendChild(questionItem);
+
+      questionLink.addEventListener("click", function (event) {
+        event.preventDefault();
+        console.log("Question link clicked!");
+        var questionId = this.getAttribute("href").substring(1);
+        var questionElement = document.getElementById(questionId);
+        scrollToElement(questionElement);
+      });
+
+      appendQuestion(questionId);
+    }
+
+    function appendQuestion(questionId) {
+      var chatBox = document.getElementById("chat-box");
+      var questionDiv = document.createElement("div");
+      questionDiv.id = questionId;
+      questionDiv.classList.add("question");
+
+      if (currentContent == "autoDetect") {
+        chatBox.appendChild(questionDiv);
+      }
+
+      autoDetectContent.push(questionDiv);
+
+    }
+
+    function scrollToElement(element) {
+      if (currentContent == "searchingResults") {
+        setAutoDetectContent();
+
+      }
+      console.log("Scrolling to element:", element);
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // Added function to scroll to the bottom of the chat box
+    function scrollToBottom() {
+      var chatBox = document.getElementById("chat-box");
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+
+    setInterval(sendMessage, 5000);
+  </script>
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.getElementById('user-input');
+      const options = document.getElementById('suggestions');
+
+      input.addEventListener('input', function () {
+        options.classList.add('active');
+      });
+
+      input.addEventListener('blur', function () {
+        options.classList.remove('active');
+      });
+
+      input.addEventListener('change', function (event) {
+        const value = input.value;
+        addToSidebarSearchingResults(value);
+        setResultContent(value);
+        console.log(value);
+        options.classList.remove('active');
+      });
+    });
+    function addToSidebarSearchingResults(input) {
+      var sidebar = document.getElementById("sidebar");
+      var resultList = document.getElementById("results-list");
+      var resultItem = document.createElement("li");
+      var resultLink = document.createElement("a");
+
+      resultLink.textContent = "Intent " + input;
+      resultItem.appendChild(resultLink);
+      resultList.appendChild(resultItem);
+
+      resultLink.addEventListener("click", function (event) {
+        event.preventDefault();
+        console.log("Result link clicked!");
+        setResultContent(input);
+      });
+
+    }
+
+  </script>
+
+</body>
+
+</html>
